@@ -1,5 +1,7 @@
 # R script for "carob"
 
+### fertilizer computations need to be fixed. 
+
 carob_script <- function(path) {
   
 "N2Africa is to contribute to increasing biological nitrogen fixation and productivity of grain legumes among African smallholder farmers which will contribute to enhancing soil fertility, improving household nutrition and increasing income levels of smallholder farmers. As a vision of success, N2Africa will build sustainable, long-term partnerships to enable African smallholder farmers to benefit from symbiotic N2-fixation by grain legumes through effective production technologies including inoculants and fertilizers adapted to local settings. A strong national expertise in grain legume production and N2-fixation research and development will be the legacy of the project. The project is implemented in five core countries (Ghana, Nigeria, Tanzania, Uganda and Ethiopia) and six other countries (DR Congo, Malawi, Rwanda, Mozambique, Kenya & Zimbabwe) as tier one countries."
@@ -193,7 +195,7 @@ carob_script <- function(path) {
   d2$yield1[grepl("UNKNOWN",d2$yield1) | d2$yield1==""] <- NA
   d2$yield1 <- as.numeric(d2$yield1)
   d2$inoculation_type <- NA
-  d2$fertilizer_type <- NA
+  d2$fertilizer_type <- "unknown"
   d2$variety <- NA
   d2$fertilizer_amount <- NA
   
@@ -204,11 +206,12 @@ carob_script <- function(path) {
   d3 <- r4[,c("farm_id","legume_area_now_ha","crop","yield_amount_now","yield_unit_now")]
   colnames(d3) <- c("trial_id","farm_size","crop","yield1","yield_unit")
   d3$inoculation_type <- NA
-  d3$fertilizer_type <- NA
+  d3$fertilizer_type <- "unknown"
   d3$fertilizer_amount <- NA
   d3$variety <- NA
 # merge d3 and d
   d3 <- merge(d,d3,by="trial_id")
+  
 ######################################################################  
   # Append All the data we process 
 ################################################
@@ -289,14 +292,13 @@ carob_script <- function(path) {
   d$fertilizer_type[d$fertilizer_type=="local" |d$fertilizer_type=="-88"|d$fertilizer_type=="RWRK10, local"] <- "unknown"
   
   #add fertilizer
-  d$N_fertilizer <- 0
-  d$P_fertilizer <- 0
-  d$K_fertilizer <- 0
-  d$N_fertilizer[d$fertilizer_type=="NPK"|d$fertilizer_type=="NPK 17 17 18" |d$fertilizer_type=="NPK 17-17-18"] <- 17
   
+  ## WRONG fertlizer amounts must be computed by multiplying quantity applied with content
+  ## should probably assing the others to NA, not zero
+  d$N_fertilizer <- d$P_fertilizer <- d$K_fertilizer <- 0
+  d$N_fertilizer[d$fertilizer_type=="NPK"|d$fertilizer_type=="NPK 17 17 18" |d$fertilizer_type=="NPK 17-17-18"] <- 17
   d$P_fertilizer[d$fertilizer_type=="NPK"|d$fertilizer_type=="NPK 17 17 18" |d$fertilizer_type=="NPK 17-17-18"] <- 17/2.29
 
-  
   d$K_fertilizer[d$fertilizer_type=="NPK"] <- 17/1.095
   d$K_fertilizer[d$fertilizer_type=="NPK 17 17 18" |d$fertilizer_type=="NPK 17-17-18"] <- 18/1.095
   
@@ -309,12 +311,15 @@ carob_script <- function(path) {
   d$country[d$country=="D.R. Congo"] <- "Democratic Republic of the Congo"
   d$adm3[d$adm2=="MUMOSHO"] <- "MUMOSHO"
   # fix long and lat coordinate
-  geo <- data.frame(adm3=c("Lulanga","lukunga","kalirine","kasheke","bishwira","bushwira","nfuzi","ikoma","ishungu","buderhe","Buyenga","mufa","IGOBEGOBE","CHIMBI 2","MULAMBI","BURHEMBO","MUMOSHO","CHANIA","BWIREMBE","BUREMBO","Shebeye","KALIRINA","BURHWAGA","CAGOMBE","Chirheja","CIRHOGOLE","cirimba","ibamba","Irambi","IRAMBO","KABIBANGA", "Kabiganda","kalunga","Kananda","karhwa","Karhwa","KARWA","Kashisiraboba","LUGANDA","mazinzi","Mazinzi","MAZINZI","MULAMBA","mulambi","mumosho","Ndola","Nshebeyi","NYANGEZI"),
-                   lat=c(-0.5220252, -4.371491,-2.7046167,-2.1518846,-2.44139,-2.4413,-2.7708003,-2.5557499,-2.300289,-2.34904,-2.6279646,-2.6279646,-3.2968958,-2.6279646,-2.7708003,-2.6279646,-2.6279646,-3.2968958,-3.2968958,-2.6560833,-2.3883942,-2.259,-2.7708003,-3.2968958,-2.2509531,-2.3883942,-2.6560833,-1.4715551,-2.1065462,-2.1065462,-2.6560833,-2.6560833,-5.5390095,-4.23383,-2.7008167,-2.7008167,-2.7008167,-2.6560833,-2.4991556,-2.6560833,-2.6560833,-2.6560833,-2.259,-2.8146579,-2.6279646,-2.7065333,-2.3883942,-2.6560833),
-                   long=c(24.5609263,15.2279106,28.5622667,28.8560076,28.73278,28.73278,28.6000504,28.7399014,28.9415696,28.89343,28.8819501,28.8819501,28.1674008,28.8819501,28.6000504,28.8819501,28.8819501,28.1674008,28.1674008,28.86975,28.7938066,29.0447778,28.6000504,28.1674008,28.8140382,28.7938066,28.86975,18.7718785,28.9186227,28.9186227,28.86975,28.86975,19.0386855,28.91839,28.5701333,28.5701333,28.5701333,28.86975,28.8343339,28.86975,28.86975,28.86975,29.0447778,28.6950944,28.8819501,28.5760167,28.7938066,28.86975))
+	geo <- data.frame(
+		adm3=c("Lulanga","lukunga","kalirine","kasheke","bishwira","bushwira","nfuzi","ikoma","ishungu","buderhe","Buyenga","mufa","IGOBEGOBE","CHIMBI 2","MULAMBI","BURHEMBO","MUMOSHO","CHANIA","BWIREMBE","BUREMBO","Shebeye","KALIRINA","BURHWAGA","CAGOMBE","Chirheja","CIRHOGOLE","cirimba","ibamba","Irambi","IRAMBO","KABIBANGA", "Kabiganda","kalunga","Kananda","karhwa","Karhwa","KARWA","Kashisiraboba","LUGANDA","mazinzi","Mazinzi","MAZINZI","MULAMBA","mulambi","mumosho","Ndola","Nshebeyi","NYANGEZI"),
+		lat=c(-0.5220252, -4.371491,-2.7046167,-2.1518846,-2.44139,-2.4413,-2.7708003,-2.5557499,-2.300289,-2.34904,-2.6279646,-2.6279646,-3.2968958,-2.6279646,-2.7708003,-2.6279646,-2.6279646,-3.2968958,-3.2968958,-2.6560833,-2.3883942,-2.259,-2.7708003,-3.2968958,-2.2509531,-2.3883942,-2.6560833,-1.4715551,-2.1065462,-2.1065462,-2.6560833,-2.6560833,-5.5390095,-4.23383,-2.7008167,-2.7008167,-2.7008167,-2.6560833,-2.4991556,-2.6560833,-2.6560833,-2.6560833,-2.259,-2.8146579,-2.6279646,-2.7065333,-2.3883942,-2.6560833),
+		long=c(24.5609263,15.2279106,28.5622667,28.8560076,28.73278,28.73278,28.6000504,28.7399014,28.9415696,28.89343,28.8819501,28.8819501,28.1674008,28.8819501,28.6000504,28.8819501,28.8819501,28.1674008,28.1674008,28.86975,28.7938066,29.0447778,28.6000504,28.1674008,28.8140382,28.7938066,28.86975,18.7718785,28.9186227,28.9186227,28.86975,28.86975,19.0386855,28.91839,28.5701333,28.5701333,28.5701333,28.86975,28.8343339,28.86975,28.86975,28.86975,29.0447778,28.6950944,28.8819501,28.5760167,28.7938066,28.86975)
+	)
    
   d <- merge(d,geo,by="adm3",all.x = T)
   i <- !is.na(d$lat)
+  d$geo_from_source <- !i
   d$latitude[i] <- d$lat[i]
   d$longitude[i] <- d$long[i]
   d$lat <- d$long <- NULL
@@ -338,7 +343,12 @@ carob_script <- function(path) {
   d$location[d$location==""] <- NA
   d$adm2[d$adm2==""] <- NA
   d$adm3[d$adm3==""] <- NA
+  d$adm2 <- carobiner::fix_name(d$adm2, "title")
+  d$adm3 <- carobiner::fix_name(d$adm3, "title")
+	d$planting_date <- as.character(NA)
   
   d$yield_part <- "seed"
+  
+  d <- unique(d)
   carobiner::write_files(meta, d, path=path)
 }

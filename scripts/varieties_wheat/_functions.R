@@ -108,6 +108,7 @@ proc_wheat <- function(ff) {
 		if (is.null(irn1)) irn1 <- 0
 		if (is.null(irn2)) irn2 <- 0
 		d$irrigation_number <- as.integer(irn1) + as.integer(irn2)
+		d$irrigation_number[d$irrigation_number > 50] <- NA
 	}
 	
 	if (!is.null(r$emergence_date)) {
@@ -123,6 +124,7 @@ proc_wheat <- function(ff) {
 	d$heading_days <- r$days_to_heading
 	if (!is.null(d$harvest_date)) {
 		if (!is.null(d$heading_days)) {
+			d$heading_days[d$heading_days == 0] <- NA
 			season <- as.numeric(d$harvest_date - d$planting_date)	
 			h <- which((d$heading_days > 150) & (d$heading_days > (season + 15)))
 			d$heading_days[h] <- NA
@@ -146,12 +148,16 @@ proc_wheat <- function(ff) {
 		d$row_spacing <- as.numeric(NA)	
 	} else {
 		d$row_spacing <- as.numeric(r$space_btn_rows_sown)
+		d$row_spacing[d$row_spacing == 0] <- NA
 	}
 
  
 	m <- matrix(byrow=TRUE, ncol=2, c(
 		"amaranthus caudatus", "foxtail amaranth",
 		"buck wheat", "buckwheat",
+		"bw", NA,
+		"brassica", NA, # perhaps add brassica to crops?
+		"cruciferas", NA,
 		"rough pro", NA, 
 		"zallon", NA,
 		"jumcean", NA,
@@ -191,6 +197,7 @@ proc_wheat <- function(ff) {
 		"pearl-mill", "pearl millet",
 		"beans&potatoes", "common bean;potato",
 		"potato and rapeseed", "potato;rapeseed",
+		"beet", "sugar beet",
 		"berseem (fodder)", "berseem clover",
 		"berseen", "berseem clover",
 		"egyption", "berseem clover",
@@ -704,6 +711,7 @@ proc_wheat <- function(ff) {
 	i <- grep("Karaj", d$location)
 	d$latitude[i] <- 35.802
 	d$geo_from_source[i] <- FALSE
+
 
 	tolow <- function(x) if (is.null(x)) NULL else tolower(x)
 

@@ -1,6 +1,5 @@
 # R script for "carob"
 
-
 carob_script <- function(path) {
   
 "The ICRAF-ISRIC Soil VNIR Spectral Library contains visible near infrared spectra of 785 soil profiles (4,438 samples) soils selected from the Soil Information System of the International Soil Reference and Information Centre (ISRIC). The samples consist of all physically archived samples at ISRIC in 2004 for which soil attribute data was available. The spectra were measured at the World Agroforestry Center (ICRAF) Soil and Plant Spectral Diagnostic Laboratory. The samples are from 58 countries spanning Africa, Asia, Europe, North America, and South America. Associated attribute data, such as geographical coordinates, horizon (depth), and physical and chemical properties, are provided as separate tables. Using different methods for linking related files as explained in the pdf document accompanying this dataset (0ICRAF-ISRICSoilVNIRSpectralLibrary.pdf), the visNIR spectra can be linked with all tables holding both physical and chemical properties."
@@ -11,7 +10,7 @@ carob_script <- function(path) {
   
 	meta <- data.frame(
 		carobiner::read_metadata(uri, path, group, major=1, minor=0),
-		data_institute = "ICRAF",
+		data_institute = "ICRAF;ISRIC",
 		publication= "doi:10.1016/j.earscirev.2016.01.012.",
 		project="FAO",
 		data_type= "survey",

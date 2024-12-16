@@ -12,7 +12,7 @@ carob_script <- function(path) {
 	meta <- data.frame(
 		carobiner::read_metadata(uri, path, group, major=1, minor=1),
 		data_institute = "CIMMYT",
-		publication = "doi.org/10.1017/S1742170521000442",
+		publication = "doi:10.1017/S1742170521000442",
 		project = NA,
 		data_type = "on-farm experiment",
 		response_vars = "yield",
@@ -51,7 +51,8 @@ carob_script <- function(path) {
 	geo <- data.frame(
 		location = c("Hereford", "Shamva", "Madziva"),
 		longitude = c(31.4644, 31.6314, 31.6553),
-		latitude = c(-17.4343, -17.1763, -17.062)
+		latitude = c(-17.4343, -17.1763, -17.062),
+		geo_from_source = FALSE
 	)  
 	d <- merge(d, geo, by = "location", all.x = TRUE)
 	

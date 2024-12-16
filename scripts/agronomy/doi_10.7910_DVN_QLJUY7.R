@@ -19,7 +19,9 @@ carob_script <- function(path) {
 		data_institute = "CIMMYT",
 		data_type="experiment",
 		carob_contributor="Fredy Chimire",
-		carob_date="2024-01-11"
+		carob_date="2024-01-11",
+		treatment_vars = NA,
+		response_vars = "yield"
 	)
   
   f <- ff[basename(ff) == "AR_MAL_CIMMYT_CAmother_onfarm_2020.csv"]
@@ -74,7 +76,8 @@ carob_script <- function(path) {
 	geo <- data.frame(
 		adm2 = c("Balaka", "Dowa", "Machinga", "Nkhotakota", "Salima", "Zomba"), 
 		longitude = c(34.9511, 33.9329, 35.2963, 34.257, 34.4461, 35.3194), 
-		latitude = c(-14.9318, -13.6279, -15.1775, -12.7037, -13.7114, -15.3737)
+		latitude = c(-14.9318, -13.6279, -15.1775, -12.7037, -13.7114, -15.3737),
+		geo_from_source = FALSE
 	)
 
 	d <- merge(d, geo, by="adm2", all.x=TRUE)

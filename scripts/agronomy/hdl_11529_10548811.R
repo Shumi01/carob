@@ -65,8 +65,10 @@ carob_script <- function(path) {
 	d <- unique(d)
 	
 	d$country="Mexico"
-	d$longitude=-102.5528
-	d$latitude=23.6345
+	# CIMMYT Obregon
+	d$longitude=-109.9318
+	d$latitude=27.3719
+	d$geo_from_source = FALSE
 	d$crop="wheat"
 	d$yield_part="grain"
 
@@ -121,7 +123,7 @@ carob_script <- function(path) {
 	d$fertilizer_type <- "none"
 	d$fertilizer_type[d$N_fertilizer > 0] <- "urea"
 	i <- which(d$Zn_fertilizer > 0)
-	d$fertilizer_type[i] <- paste0(d$fertilizer_type[i], ";ZnSo4")
+	d$fertilizer_type[i] <- paste0(d$fertilizer_type[i], ";ZnSO4")
 	d$fertilizer_type <- gsub("none;", "", d$fertilizer_type)
 
 # could be added to capture the foliar applications

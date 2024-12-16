@@ -1,6 +1,5 @@
 # R script for "carob"
 
-
 carob_script <- function(path) {
   
 "This trial is designed with 1 conventional farmers practice and 4 conservation agriculture (CA) treatments in 5 replications; Plots are subdivided into a continues maize area and a maize/legume (sunnhemp) rotation to investigate the effect of CA practices on soil quality and system productivity. The trial was set in the growing season of 2005 and is still running through to 2017 and beyond. The treatments are as follows: 
@@ -155,6 +154,7 @@ T5. Magoye ripping (RI-ML): maize with residue retention, intercropped with cowp
                 "Conventional mouldboard ploughing", "Magoye ripper","Magoye ripper-maize rotation")
   
   d$treatment <- treatname[match(d$treatment,treatcode)]
+	d$geo_from_source <- FALSE
   
   carobiner::write_files(meta, d, path=path)
 }

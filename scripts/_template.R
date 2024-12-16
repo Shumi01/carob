@@ -20,6 +20,7 @@ carob_script <- function(path) {
 	meta <- data.frame(
 		# change the major and minor versions if you see a warning
 		carobiner::read_metadata(uri, path, group, major=1, minor=0),
+		# include the data provider and/or all institutes listed as authors (if any)
 		data_institute = "",
 		# if there is a paper, include the paper's doi here
 		# also add a RIS file in references folder (with matching doi)
@@ -72,7 +73,8 @@ carob_script <- function(path) {
 	d$is_survey <- 
 	d$irrigated <-
 	
-
+## crop rotation. If available, add all crops, including "d$crop". Use an underscore for intercrops 
+    d$crop_rotation <- "crop1;crop2;crop3_crop4"
 	
 ## each site must have corresponding longitude and latitude
 ## if the raw data do not provide them you can estimate them from the location/adm data 
